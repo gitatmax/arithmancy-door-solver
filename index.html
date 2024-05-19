@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1">
+  <title>Solver 🧙</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🚪</text></svg>">
+
+  <style>
+    hr {
+      margin: 20px 0;
+      border: 1px dotted var(--text-color);
+    }
+
+    body,
+    h1,
+    h2,
+    input,
+    button {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body,
+    input,
+    button {
+      font-size: 1rem;
+    }
+
+    /* Light Mode Styles */
+    :root {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --input-background-color: #f0f0f0;
+      --button-background-color: #007bff;
+      --button-text-color: #ffffff;
+    }
+
+    /* Dark Mode Styles */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: #121212;
+        --text-color: #ffffff;
+        --input-background-color: #333333;
+        --link-color: #add8e6;
+      }
+
+      a {
+        color: var(--link-color);
+      }
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding: 20px;
+    }
+
+    input[type="number"] {
+      background-color: var(--input-background-color);
+      color: var(--text-color);
+      border: none;
+      padding: 10px;
+      margin: 5px 0;
+      width: calc(100% - 22px);
+    }
+
+    /* Hide the spinner in number inputs */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+      /* Firefox */
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    button {
+      background-color: var(--button-background-color);
+      color: var(--button-text-color);
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      display: inline-block;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      input[type="number"] {
+        width: 10vh;
+      }
+    }
+  </style>
+
+  <script>
+    const numberToBeast = {
+      0: 'Demiguise',
+      1: 'Unicorn',
+      2: 'Graphorn',
+      3: 'Runespoor (3-Headed)',
+      4: 'Fwooper',
+      5: 'Quintaped (5-Legged)',
+      6: 'Lizard',
+      7: 'Squid',
+      8: 'Spider',
+      9: 'Hydra',
+    };
+
+    function calculateAndDisplayBeasts() {
+      // Calculate for top triangle only if all its fields have input
+      if (document.getElementById('topCorner1').value && document.getElementById('topCorner2').value && document.getElementById('topInside').value) {
+        calculateBeast('top');
+      } else {
+        // Clear the previous result if not all fields have input
+        document.getElementById('resultTop').innerText = "";
+      }
+
+      // Calculate for bottom triangle only if all its fields have input
+      if (document.getElementById('bottomCorner1').value && document.getElementById('bottomCorner2').value && document.getElementById('bottomInside').value) {
+        calculateBeast('bottom');
+      } else {
+        // Clear the previous result if not all fields have input
+        document.getElementById('resultBottom').innerText = "";
+      }
+    }
+
+    function calculateBeast(position) {
+      const corner1 = parseInt(document.getElementById(position + 'Corner1').value) || 0;
+      const corner2 = parseInt(document.getElementById(position + 'Corner2').value) || 0;
+      const inside = parseInt(document.getElementById(position + 'Inside').value) || 0;
+
+      const sumCorners = corner1 + corner2;
+      const difference = inside - sumCorners;
+      const beast = numberToBeast[difference] || 'Unknown Beast';
+
+      document.getElementById('result' + position.charAt(0).toUpperCase() + position.slice(1)).innerText = position.charAt(0).toUpperCase() + position.slice(1) + " Triangle Beast: " + beast;
+    }
+  </script>
+
+</head>
+
+<body>
+  <h1>🚪 Solver 🧙</h1>
+  <p>This is <a href="/" target="_blank">my</a> take (WIP) on a calculator for the Arithmancy Doors in <a
+      href="https://en.wikipedia.org/wiki/Hogwarts_Legacy" target="_blank">Hogwarts Legacy</a>.
+    Each beast in the puzzles
+    corresponds to a number. We use these numbers and the ones provided on the door to quickly find the solution!</p>
+  <div>
+    <h2>Top Puzzle</h2>
+    <input min="0" type="number" id="topCorner1" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <input min="0" type="number" id="topCorner2" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <input min="0" type="number" id="topInside" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <p id="resultTop"></p>
+  </div>
+  <div>
+    <h2>Bottom Puzzle</h2>
+    <input min="0" type="number" id="bottomCorner1" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <input min="0" type="number" id="bottomCorner2" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <input min="0" type="number" id="bottomInside" placeholder="0" oninput="calculateAndDisplayBeasts()">
+    <p id="resultBottom"></p>
+    <a href="/door-solver/"><button>reload</button></a>
+    <hr>
+
+    <h2>Beast Key</h2>
+
+    <img src="key.svg" />
+    <hr>
+    <h2>Notes</h2>
+    <ul>
+      <li>Make clearer which field is which (typically, you'll want to start from the left-most and work your way right)
+      </li>
+      <li>To Do: Create a GPT for conversational calculation</li>
+      <li>You may like <a href="https://eip.gg/hogwarts-legacy/puzzle-door-solver/" target="_blank">this
+          project</a> which helped inspire this page.
+      </li>
+      <li><a target="_blank" href="https://github.com/gitatmax/arithmancy-door-solver">Check out this project on
+          GitHub</a>!</li>
+    </ul>
+
+  </div>
+</body>
+
+</html>
